@@ -3,7 +3,7 @@ casablanca
 twitter bot that monitors twitter & replies to targeted accounts with a previous White House Log.
 
 
-Create config.json
+**Create config.json**
 
 ```
 {
