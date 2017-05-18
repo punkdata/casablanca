@@ -38,18 +38,26 @@ s_date = datetime.date(2017,01,20)
 e_date = datetime.datetime.now().date()
 
 class StreamListener(tweepy.StreamListener):
-    
+    '''
+    Twitter Stream listener
+    '''
     def has_tweet(self, tid):
+        '''
+        Checks if a tweet already exists in the db
+        '''
         client = MongoClient(MONGO_URI)
         db = client['djt']
         tweets = db.tweets
-        twt = tweets.find({'tid':tid,'processed':True})
+        twt = tweets.find({'tid':tid, 'processed':True})
         if twt.count()>0:
             return True
         else:
             return False
 
     def get_log(self):
+        '''
+        Retrieves an unprocessed log from the db
+        '''
         client = MongoClient(MONGO_URI)
         db = client['casablanca']
         docs = db.wh_logs.find({'place':'White House', 'processed':False}).sort('date', 1).limit(1)
@@ -67,6 +75,9 @@ class StreamListener(tweepy.StreamListener):
         return log
 
     def update_log_processed(self, objID):
+        '''
+        Update a log as processed
+        '''
         client = MongoClient(MONGO_URI)
         db = client['casablanca']
         log = db.wh_logs.find_one_and_update({'_id':objID}, {'$set':{'processed':True}})
@@ -79,9 +90,17 @@ class StreamListener(tweepy.StreamListener):
         if (user_id in RESPONSE_TARGETS) and not hasattr(status, 'retweeted_status'):
             log = self.get_log()
 
-            msg = '@{0} '.format(scr_name)+log['message']
-            tweet = ' '.join(msg.split())
-            api.update_status(status=tweet, in_reply_to_status_id=status_id)
+            resp_msg = '@{0} '.format(scr_name)+log['message']
+            resp_msg = ' '.join(resp_msg.split())
+            tweet = ' '.join(log['message'].split())
+
+            # reply to reponse targets
+            api.update_status(status=resp_msg, in_reply_to_status_id=status_id)
+
+            # just plain ole tweet to account
+            api.update_status(status=tweet)
+
+            # Flag log as processed
             self.update_log_processed(log['_id'])
 
     def on_error(self, status_code):
