@@ -1,3 +1,4 @@
+# -*- coding: utf-8 -*-
 import os, sys, json, tweepy
 import requests, datetime, radar, random
 from tweepy import StreamListener
@@ -69,7 +70,7 @@ class StreamListener(tweepy.StreamListener):
         vname = v['first_name']+' '+v['last_name']
         title = v['title'] if v['title'] else ''
         org = v['organization']['name'] if v['organization'] else ''
-        msg = '{0} {1} {2} {3} visited the White House'.format(v_date, vname, title, org)
+        msg = '{0} {1} {2} {3} visited the White House'.format(v_date, vname.encode('utf-8'), title.encode('utf-8'), org.encode('utf-8'))
         msg = ' '.join(msg.split())
         log = {'_id':log['_id'], 'message':msg}
         return log
@@ -89,7 +90,6 @@ class StreamListener(tweepy.StreamListener):
         scr_name = status.user.screen_name
         if (user_id in RESPONSE_TARGETS) and not hasattr(status, 'retweeted_status'):
             log = self.get_log()
-
             resp_msg = '@{0} '.format(scr_name)+log['message']
             resp_msg = ' '.join(resp_msg.split())
             tweet = ' '.join(log['message'].split())

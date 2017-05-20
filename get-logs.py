@@ -1,3 +1,4 @@
+# -*- coding: utf-8 -*-
 import os, sys, json, tweepy, requests, datetime, radar, random
 from tweepy import StreamListener
 from tweepy import Stream
@@ -193,9 +194,32 @@ def get_random_visitor(start_date, end_date):
         get_random_visitor(start_date,end_date)
 
 
+def get_log():
+    '''
+    Retrieves an unprocessed log from the db
+    '''
+    client = MongoClient(MONGO_URI)
+    db = client['casablanca']
+    docs = db.wh_logs.find({'place':'White House', 'processed':False}).sort('date', 1).limit(1)
+    log = None
+    for doc in docs:
+        log = doc
+    v_date = log['date'].strftime('%b %d, %Y')
+    v = log['visitor']
+    vname = v['first_name']+' '+v['last_name']
+    title = v['title'] if v['title'] else ''
+    org = v['organization']['name'] if v['organization'] else ''
+    print type(org)
+
+    msg = '{0} {1} {2} {3} visited the White House'.format(v_date, vname.encode('utf-8'), title.encode('utf-8'), org.encode('utf-8'))
+    msg = ' '.join(msg.split())
+    log = {'_id':log['_id'], 'message':msg}
+    return log
+
 # s_date = datetime.date(2017,01,20)
 # e_date = datetime.datetime.now().date()
 # save_src_wh_logs(s_date,e_date)
 
 save_current_src_wh_logs()
+
 

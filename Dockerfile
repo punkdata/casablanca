@@ -1,3 +1,5 @@
+# docker build --rm=true -t casablanca .
+
 FROM python:2-alpine
 MAINTAINER "Angel Rivera"
 
