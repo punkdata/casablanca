@@ -213,6 +213,11 @@ def get_log():
 
     msg = '{0} {1} {2} {3} visited the White House'.format(v_date, vname.encode('utf-8'), title.encode('utf-8'), org.encode('utf-8'))
     msg = ' '.join(msg.split())
+    
+    # Check Message Characters
+    if len(msg) > 140:
+        msg = '{0} {1} {2} visited the White House'.format(v_date, vname.encode('utf-8'), title.encode('utf-8'))
+        msg = ' '.join(msg.split())
     log = {'_id':log['_id'], 'message':msg}
     return log
 
@@ -220,6 +225,8 @@ def get_log():
 # e_date = datetime.datetime.now().date()
 # save_src_wh_logs(s_date,e_date)
 
-save_current_src_wh_logs()
+# save_current_src_wh_logs()
 
-
+l = get_log()
+print l['message']
+print len(l['message'])

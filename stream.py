@@ -72,6 +72,12 @@ class StreamListener(tweepy.StreamListener):
         org = v['organization']['name'] if v['organization'] else ''
         msg = '{0} {1} {2} {3} visited the White House'.format(v_date, vname.encode('utf-8'), title.encode('utf-8'), org.encode('utf-8'))
         msg = ' '.join(msg.split())
+        
+        # Check Message Characters
+        if len(msg) > 140:
+            msg = '{0} {1} {2} visited the White House'.format(v_date, vname.encode('utf-8'), title.encode('utf-8'))
+            msg = ' '.join(msg.split())
+            
         log = {'_id':log['_id'], 'message':msg}
         return log
 
