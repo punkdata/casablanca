@@ -77,7 +77,7 @@ class StreamListener(tweepy.StreamListener):
         if len(msg) > 140:
             msg = '{0} {1} {2} visited the White House'.format(v_date, vname.encode('utf-8'), title.encode('utf-8'))
             msg = ' '.join(msg.split())
-            
+
         log = {'_id':log['_id'], 'message':msg}
         return log
 
@@ -97,8 +97,7 @@ class StreamListener(tweepy.StreamListener):
         if (user_id in RESPONSE_TARGETS) and not hasattr(status, 'retweeted_status'):
             log = self.get_log()
             resp_msg = '@{0} '.format(scr_name)+log['message']
-            resp_msg = ' '.join(resp_msg.split())
-            tweet = ' '.join(log['message'].split())
+            tweet = log['message']
 
             # reply to reponse targets
             api.update_status(status=resp_msg, in_reply_to_status_id=status_id)
