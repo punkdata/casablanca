@@ -221,12 +221,25 @@ def get_log():
     log = {'_id':log['_id'], 'message':msg}
     return log
 
+
+def get_status(status_id):
+    twt = api.get_status(status_id)
+    tjson = twt._json
+
+    print json.dumps(tjson)
+
+    # for k, v in tjson.items():
+    #     print 'Key: {0}  Value: {1}'.format(k, v)
+
 # s_date = datetime.date(2017,01,20)
 # e_date = datetime.datetime.now().date()
 # save_src_wh_logs(s_date,e_date)
 
-# save_current_src_wh_logs()
+save_current_src_wh_logs()
 
-l = get_log()
-print l['message']
-print len(l['message'])
+
+# l = get_log()
+# print l['message']
+# print len(l['message'])
+
+# get_status('868407229380268033')
