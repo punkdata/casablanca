@@ -99,11 +99,15 @@ class StreamListener(tweepy.StreamListener):
             resp_msg = '@{0} '.format(scr_name)+log['message']
             tweet = log['message']
 
-            # reply to reponse targets
-            api.update_status(status=resp_msg, in_reply_to_status_id=status_id)
+            if len(resp_msg) <= 140 or len(tweet) <= 140:
 
-            # just plain ole tweet to account
-            api.update_status(status=tweet)
+                # reply to reponse targets
+                api.update_status(status=resp_msg, in_reply_to_status_id=status_id)
+
+                # just plain ole tweet to account
+                api.update_status(status=tweet)
+            else:
+                print 'Tweet response is over 140 characters.'
 
             # Flag log as processed
             self.update_log_processed(log['_id'])
